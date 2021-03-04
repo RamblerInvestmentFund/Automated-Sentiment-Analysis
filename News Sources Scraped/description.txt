@@ -1,0 +1,3 @@
+utilize the code from bitcoin scrape on your assigned site
+
+naming convention YourNewsSource.py
