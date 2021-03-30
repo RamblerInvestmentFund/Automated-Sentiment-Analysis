@@ -33,11 +33,11 @@ def main():
 
     #set up directories
     scrape_path =  'data/cnbc.com'                         #path of directories containing news source data (should create data/cnbc.com dir within current repo dir
-    dir_command = 'mkdir -p ' + scrape_path                #command to create directories designated in data_path
+    dir_command = 'mkdir -p ' + scrape_path                #command to create directories designated in scrape_path
     os.system(dir_command)
 
     parse_path =  'data/cnbc_headlines'                     #path of directories containing parsed data or headlines
-    dir_command = 'mkdir -p ' + parse_path                  #command to create directories designated in data_path
+    dir_command = 'mkdir -p ' + parse_path                  #command to create directories designated in parse_path
     os.system(dir_command)
 
 
