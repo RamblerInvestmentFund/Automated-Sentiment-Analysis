@@ -18,7 +18,7 @@ def parsehtml():
                         outfile.write(headline + '\n')                                           #write headline to file
                 outfile.close()
 
-        else: continue                                                                            #if file has been parsed continue
+        else: continue                                                                           #if file has been parsed continue
 
 
 
