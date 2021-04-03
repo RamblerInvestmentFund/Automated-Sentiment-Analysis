@@ -29,7 +29,7 @@ def get_uploadTime(epoch_time, elapsed_time):
     return str(epoch)
 
 
-
+#function to convert raw data to csv
 def to_csv(infile, entry):
     outfile = "data/cnbc_csv/cnbc_data_" + entry + '.csv'                                         #designate outfile
     df = pd.read_csv(infile, delimiter="\t")                                                      #read raw data into data frame
@@ -41,7 +41,7 @@ def to_csv(infile, entry):
     df.to_csv(outfile, index=False)                                                               #write to csv
 
 
-
+#function to parse html content and create text file containing raw data
 def parsehtml():
     data_path = 'data/cnbc.com'                                                                           #path of directories containing news source data (should create data/cnbc.com dir within current repo dir)
     for entry in os.scandir(data_path):                                                                   #for each scrape entry in cnbc.com folder
