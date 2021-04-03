@@ -1,4 +1,5 @@
 #!/usr/bin/python
+
 import time
 import pycurl
 import os
@@ -32,18 +33,21 @@ def main():
 
 
     #set up directories
-    scrape_path =  'data/cnbc.com'                         #path of directories containing news source data (should create data/cnbc.com dir within current repo dir
-    dir_command = 'mkdir -p ' + scrape_path                #command to create directories designated in scrape_path
+    scraped_data_path =  'data/cnbc.com'                          #directory path containing scraped news source data (should create data/cnbc.com dir within current repo dir)
+    dir_command = 'mkdir -p ' + scraped_data_path                 #command to create directories designated in scrape_path
     os.system(dir_command)
 
-    parse_path =  'data/cnbc_headlines'                     #path of directories containing parsed data or headlines
-    dir_command = 'mkdir -p ' + parse_path                  #command to create directories designated in parse_path
+    parsed_data_path =  'data/cnbc_headlines'                     #directory path containing parsed raw data
+    dir_command = 'mkdir -p ' + parsed_data_path                  #command to create directories designated in parse_path
     os.system(dir_command)
 
+    csv_data_path = 'data/cnbc_csv'                               #directory path containing cnbc csv (timestamp + headlines)
+    dir_command = 'mkdir -p ' + csv_data_path                     #command to create directories designated in parse_path
+    os.system(dir_command)
 
-    current_scrape = str(int(time.time()))                  #label current scrape according to epoch at download time
-    fname = scrape_path + '/' + current_scrape + '.txt'     #create file named according to epoch at download time within data path directory
-    with open(fname, "wb") as outfile:                      #file contains cnbc front page info in html including headlines...
+    current_scrape = str(int(time.time()))                        #label current scrape according to epoch at download time
+    fname = scraped_data_path + '/' + current_scrape + '.txt'     #create file named according to epoch at download time within data path directory
+    with open(fname, "wb") as outfile:                            #file contains cnbc front page info in html including headlines...
         outfile.write(body)
 
 
