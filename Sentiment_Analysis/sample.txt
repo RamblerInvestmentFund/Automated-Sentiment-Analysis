@@ -1,0 +1,4 @@
+timestamp, article title
+1616856618882,"Probe Finds No Safety Problems With BioNTech Vaccine Packaging After Hong Kong Halts Shots"
+1616855251844,"10 People Shot, 2 Killed, In Virginia Beach"
+1616807934321,"Amazon Gets Emergency FDA Approval For At-Home Covid-19 Test Kit"
