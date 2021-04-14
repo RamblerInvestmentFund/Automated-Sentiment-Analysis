@@ -92,7 +92,6 @@ def parsehtml():
         else: continue                                                                                     #if file has been parsed continue
 
 
-
 if __name__ == "__main__":
     parsehtml()
 
