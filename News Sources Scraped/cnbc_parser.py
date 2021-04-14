@@ -9,7 +9,6 @@ from bs4 import BeautifulSoup
 #converts text file to csv which includes upload time of headline in epoch
 
 
-
 #function to get article's time of upload in epoch
 def get_uploadTime(epoch_time, elapsed_time):
     download = datetime.datetime.fromtimestamp(int(epoch_time))                                  #convert epoch to date format (%Y-%m-%d %H:%M:%S")
@@ -30,15 +29,46 @@ def get_uploadTime(epoch_time, elapsed_time):
 
 
 #function to convert raw data to csv
-def to_csv(infile, entry):
-    outfile = "data/cnbc_csv/cnbc_data_" + entry + '.csv'                                         #designate outfile
-    df = pd.read_csv(infile, delimiter="\t")                                                      #read raw data into data frame
-    for index, row in df.iterrows():                                                              #for each row in data frame
-        epoch = row["Download-Time"]                                                              #set download time as epoch at download
-        elapsed = row["Elapsed-Time"]                                                             #set elapsed to time elapsed since upload
-        upload = get_uploadTime(epoch, elapsed)                                                   #call function get_uploadTime
-        df.at[index, 'Upload-Time'] = upload                                                      #append upload time to appropriate row
-    df.to_csv(outfile, index=False)                                                               #write to csv
+def to_csv(infile):
+    outfile = "data/cnbc_csv/cnbc_ALL_headlines.csv"                                                   #designate outfile (issue its empty at first, will comparisons work with different dim df)
+    teslafile = "data/cnbc_csv/tesla_headlines.cvs"
+    if((os.path.exists(outfile) == False)):
+        df = pd.read_csv(infile, delimiter="\t")                                                       #read raw data into data frame
+        for index, row in df.iterrows():                                                               #for each row in data frame
+            epoch = row["Download-Time"]                                                               #set download time as epoch at download
+            elapsed = row["Elapsed-Time"]                                                              #set elapsed to time elapsed since upload
+            upload = get_uploadTime(epoch, elapsed)                                                    #call function get_uploadTime
+            df.at[index, 'Upload-Time'] = upload                                                       #append upload time to appropriate row
+        df = df.loc[::-1].reset_index(drop = True)
+        contains_Tesla = df[df['Headline'].str.contains("Tesla|Tesla Motors|TSLA|SpaceX|Elon Musk|Elon Musk's|Musk")]
+        df.to_csv(outfile, index=False)                                                                #write to csv
+        contains_Tesla.to_csv(teslafile, index=False)
+    elif((os.path.exists(outfile) == True)):
+        master = pd.read_csv(outfile)                                                                  #read master csv
+        last_headline = master['Headline'].iloc[-1]                                                    #get last recorded headline from ALL headlines file
+        df = pd.read_csv(infile, delimiter="\t")                                                       #read raw data into data frame
+        i = df.index[df['Headline'] == last_headline].tolist()
+        if not i:
+            for index, row in df.iterrows():                                                           #for each row in data frame
+                epoch = row["Download-Time"]                                                           #set download time as epoch at download
+                elapsed = row["Elapsed-Time"]                                                          #set elapsed to time elapsed since upload
+                upload = get_uploadTime(epoch, elapsed)                                                #call function get_uploadTime
+                df.at[index, 'Upload-Time'] = upload                                                   #append upload time to appropriate row
+            df = df.loc[::-1].reset_index(drop = True)
+            contains_Tesla = df[df['Headline'].str.contains("Tesla|Tesla Motors|TSLA|SpaceX|Elon Musk|Elon Musk's|Musk")]
+            df.to_csv(outfile, mode='a', index=False, header=False)                                    #write to csv
+            contains_Tesla.to_csv(teslafile, mode='a', index=False, header=False)
+        else:
+            new, recorded = df.iloc[:i[0], :], df.iloc[i[0]:, :]
+            for index, row in new.iterrows():                                                          #for each row in data frame
+                epoch = row["Download-Time"]                                                           #set download time as epoch at download
+                elapsed = row["Elapsed-Time"]                                                          #set elapsed to time elapsed since upload
+                upload = get_uploadTime(epoch, elapsed)                                                #call function get_uploadTime
+                new.at[index, 'Upload-Time'] = upload                                                  #append upload time to appropriate row
+            new = new.loc[::-1].reset_index(drop = True)
+            contains_Tesla = new[new['Headline'].str.contains("Tesla|Tesla Motors|TSLA|SpaceX|Elon Musk|Elon Musk's|Musk")]
+            new.to_csv(outfile,  mode='a', index=False, header=False)                                  #write to csv
+            contains_Tesla.to_csv(teslafile, mode='a', index=False, header=False)
 
 
 #function to parse html content and create text file containing raw data
@@ -58,9 +88,8 @@ def parsehtml():
                             outfile.write(entry.name[:-4] + '\t' + timestamp.get_text() + '\t' + 'conversion-needed' + '\t' + headline.get_text() + '\n')    #write to txt file in tab delimited format
                 outfile.close()
             htmlfile.close()
-            to_csv(infile,entry.name[:-4])                                                                 #call function to convert raw data to csv
+            to_csv(infile)                                                                                 #call function to convert raw data to csv
         else: continue                                                                                     #if file has been parsed continue
-
 
 
 
